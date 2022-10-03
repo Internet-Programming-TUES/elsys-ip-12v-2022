@@ -16,33 +16,53 @@ public class SocketClient {
         clientSocket = new Socket(ip, port);
         out = new PrintWriter(clientSocket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        Thread thread = new Thread(new Runnable() {
+            public void run() {
+                try {
+                    inputLoop();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                try {
+                    stopConnection();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                System.exit(0);
+            }
+        });
+        thread.start();
+        consoleLoop();
     }
 
-    public String sendMessage(String msg) throws IOException {
+    public void sendMessage(String msg) {
         out.println(msg);
-        String resp = in.readLine();
-        return resp;
+    }
+
+    public String readMessage() throws IOException {
+        return in.readLine();
+    }
+
+    private void consoleLoop() throws IOException {
+        Scanner scanner = new Scanner(System.in);
+        do {
+            String line = scanner.nextLine();
+            sendMessage(line);
+        } while (true);
+    }
+
+    private void inputLoop() throws IOException {
+        String response = null;
+        do {
+            response = readMessage();
+            System.out.println(response);
+        } while (response != null);
     }
 
     public void stopConnection() throws IOException {
         in.close();
         out.close();
         clientSocket.close();
-    }
-
-    public static void main(String[] args) throws IOException {
-        SocketClient client = new SocketClient();
-        client.startConnection("localhost", 6666);
-
-        Scanner scanner = new Scanner(System.in);
-        String response = null;
-        do {
-            String line = scanner.nextLine();
-            response = client.sendMessage(line);
-            System.out.println(response);
-        } while (response != null);
-
-        client.stopConnection();
-        scanner.close();
     }
 }

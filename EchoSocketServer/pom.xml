@@ -17,7 +17,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>org.elsys.ip.socket.EchoSocketServer</mainClass>
+                            <mainClass>org.elsys.ip.socket.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
