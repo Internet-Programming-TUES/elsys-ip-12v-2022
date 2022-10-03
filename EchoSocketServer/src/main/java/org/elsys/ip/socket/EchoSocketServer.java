@@ -1,7 +1,5 @@
 package org.elsys.ip.socket;
 
-import com.sun.xml.internal.ws.client.ClientTransportException;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
