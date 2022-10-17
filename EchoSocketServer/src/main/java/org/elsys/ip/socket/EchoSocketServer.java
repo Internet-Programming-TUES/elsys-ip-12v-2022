@@ -55,13 +55,33 @@ public class EchoSocketServer {
                 String message = null;
 
                 out.println(String.format("Your name is: %s", username));
+                for (ClientThread client : clients) {
+                    if (client.out != null && client != this)
+                        client.out.println(String.format("%s connected", username));
+                }
+
+                long lastTime = 0L;
                 do {
                     message = in.readLine();
-                    for (ClientThread client : clients) {
-                        if (client.out != null)
-                            client.out.println(String.format("%s: %s", username, message));
+                    if (message.matches("\\s*")) {
+                        continue;
+                    }
+                    long currentTime = System.currentTimeMillis();
+                    if (currentTime - lastTime >= 3000) {
+                        lastTime = currentTime;
+                        for (ClientThread client : clients) {
+                            if (client.out != null)
+                                client.out.println(String.format("%s: %s", username, message.trim()));
+                        }
+                    } else {
+                        out.println("SERVER: You must wait 3 seconds to write.");
                     }
                 } while (!message.equals("exit"));
+
+                for (ClientThread client : clients) {
+                    if (client.out != null && client != this)
+                        client.out.println(String.format("%s disconnected", username));
+                }
 
                 in.close();
                 out.close();
