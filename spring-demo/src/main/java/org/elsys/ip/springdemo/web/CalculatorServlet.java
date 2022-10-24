@@ -21,20 +21,34 @@ public class CalculatorServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
-        if (pathInfo.equals("/add")) {
-            List<Integer> params = req
-                    .getParameterMap().values().stream() //Stream<String[]>
-                    .flatMap(x -> Arrays.stream(x)) //Stream<String>
-                    .map(x -> {
-                        try {
-                            return Integer.parseInt(x);
-                        } catch (NumberFormatException ex) {
-                            return null;
-                        }
-                    }).filter(x -> x != null).collect(Collectors.toList());
 
-            int result =  calculator.plus(params);
+        List<Integer> params = req
+                .getParameterMap().values().stream() //Stream<String[]>
+                .flatMap(x -> Arrays.stream(x)) //Stream<String>
+                .map(x -> {
+                    try {
+                        return Integer.parseInt(x);
+                    } catch (NumberFormatException ex) {
+                        return null;
+                    }
+                }).filter(x -> x != null).collect(Collectors.toList());
+
+        if (pathInfo.equals("/add")) {
+            int result = calculator.add(params);
             resp.getWriter().println(result);
+        } else if (pathInfo.equals("/sub")) {
+            int result = calculator.sub(params);
+            resp.getWriter().println(result);
+        } else if (pathInfo.equals("/mul")) {
+            int result = calculator.mul(params);
+            resp.getWriter().println(result);
+        } else if (pathInfo.equals("/div")) {
+            try {
+                int result = calculator.div(params);
+                resp.getWriter().println(result);
+            } catch (Calculator.DivisionByZeroException e) {
+                resp.getWriter().println("Division by zero is not possible.");
+            }
         } else {
             resp.setStatus(404);
         }
