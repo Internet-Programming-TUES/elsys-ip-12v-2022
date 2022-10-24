@@ -15,6 +15,6 @@ public class Logic {
 
     @PostConstruct
     public void logic() {
-        System.out.println("5 + 4 = " + calculator.aplusb(5,4));
+        //System.out.println("5 + 4 = " + calculator.aplusb(5,4));
     }
 }
