@@ -1,6 +1,5 @@
 package org.elsys.ip;
 
-import org.assertj.core.internal.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
-
-import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,31 +43,14 @@ class GuessGameApplicationTests {
             assertThat(postEntity.getStatusCodeValue()).isEqualTo(200);
         } while (guessGameServlet.secretNumber == minNumber || guessGameServlet.secretNumber == maxNumber);
 
-        int minRange = minNumber;
-        int maxRange = maxNumber;
-        int guesses = 0;
+        ResponseEntity<String> getEntity = restTemplate.getForEntity(url + "?guess=" + (guessGameServlet.secretNumber+1), String.class);
+        assertThat(getEntity.getStatusCodeValue()).isEqualTo(480);
 
-        System.out.println("The number is " + guessGameServlet.secretNumber);
+        getEntity = restTemplate.getForEntity(url + "?guess=" + (guessGameServlet.secretNumber-1), String.class);
+        assertThat(getEntity.getStatusCodeValue()).isEqualTo(490);
 
-        do {
-            guesses += 1;
-            int guess = (minRange + maxRange) / 2;
-
-            System.out.println("Try with "+ guess);
-            ResponseEntity<String> getEntity =
-                    restTemplate.getForEntity(url + "?guess=" + guess, String.class);
-            if (getEntity.getStatusCodeValue() == 200) {
-                break;
-            }
-            if (getEntity.getStatusCodeValue() == 480) {
-                maxRange = guess-1;
-            }
-            if (getEntity.getStatusCodeValue() == 490) {
-                minRange = guess+1;
-            }
-        } while (guesses < 1000000);
-
-        System.out.println("It took " + guesses + " guesses");
+        getEntity = restTemplate.getForEntity(url + "?guess=" + guessGameServlet.secretNumber, String.class);
+        assertThat(getEntity.getStatusCodeValue()).isEqualTo(200);
     }
 
 }
