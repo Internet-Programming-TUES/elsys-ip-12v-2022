@@ -12,26 +12,38 @@ import java.util.Random;
 
 @Component
 public class GuessGameServlet extends HttpServlet {
-    public int secretNumber = 0;
+    public long secretNumber = 0;
     Random random = new Random();
 
     @Value("${min.number}")
-    int minNumber;
+    long minNumber;
 
     @Value("${max.number}")
-    int maxNumber;
+    long maxNumber;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        secretNumber = random.nextInt(maxNumber+1);
+        String minString = req.getParameter("min");
+        long min = this.minNumber;
+        if (minString != null) {
+            min = Long.parseLong(minString);
+        }
+
+        String maxString = req.getParameter("max");
+        long max = this.maxNumber;
+        if (minString != null) {
+            max = Long.parseLong(maxString);
+        }
+
+        secretNumber = min + (Math.abs(random.nextLong()) % (max-min+1));
+        System.out.println("New game with number: " + secretNumber + " from range(" + min + " : " + max + ")");
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int guess = Integer.parseInt(req.getParameter("guess"));
-        if (guess < minNumber || guess > maxNumber) {
-            resp.setStatus(479);
-        } else if (guess == secretNumber) {
+        long guess = Long.parseLong(req.getParameter("guess"));
+
+        if (guess == secretNumber) {
             resp.setStatus(200);
         } else if (guess > secretNumber) {
             resp.setStatus(480);
