@@ -1,5 +1,6 @@
 package org.elsys.ip.guessrest;
 
+import org.elsys.ip.guessrest.service.GuessGameService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ class GuessGameApplicationTests {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private GuessController controller;
+    private GuessGameService guessGameService;
 
     private String url;
 
@@ -44,9 +45,9 @@ class GuessGameApplicationTests {
             ResponseEntity<String> postEntity = restTemplate.postForEntity(url, "", String.class);
             assertThat(postEntity.getStatusCodeValue()).isEqualTo(200);
             gameId = postEntity.getBody();
-        } while (controller.games.get(gameId) == minNumber || controller.games.get(gameId) == maxNumber);
+        } while (guessGameService.getGames().get(gameId) == minNumber || guessGameService.getGames().get(gameId) == maxNumber);
 
-        long secretNumber = controller.games.get(gameId);
+        long secretNumber = guessGameService.getGames().get(gameId);
 
         ResponseEntity<String> getEntity = restTemplate.getForEntity(url + "/" + gameId + "?guess=" + (secretNumber+1), String.class);
         assertThat(getEntity.getStatusCodeValue()).isEqualTo(480);
