@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Giga Chad</title>
+</head>
+<body>
+<table>
+    <tr th:each="chat : ${chats}">
+        <td th:text="${chat.name}" style="color:blue"/>
+        <td th:text="${chat.message}"/>
+    </tr>
+</table>
+<form method="post" action="/chat">
+    <p>Name: <input name="name" type="text" th:value="${name}"/></p>
+    <p>Message: <input name="message" type="text" /></p>
+    <input type="submit" />
+</form>
+<a href="chat" >Reload</a>
+</body>
+</html>
