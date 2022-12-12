@@ -1,6 +1,10 @@
 package org.elsys.ip.fifaresults;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public class MatchResult {
     //MatchNumber	:	46
@@ -13,7 +17,8 @@ public class MatchResult {
     //HomeTeamScore	:	2
     //AwayTeamScore	:	1
     @JsonProperty("DateUtc")
-    private String date;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss'Z'")
+    private LocalDateTime date;
 
     @JsonProperty("HomeTeam")
     private String homeTeam;
@@ -30,7 +35,7 @@ public class MatchResult {
     @JsonProperty("AwayTeamScore")
     private int awayTeamScore;
 
-    public String getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
@@ -54,7 +59,7 @@ public class MatchResult {
         return awayTeamScore;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

@@ -2,6 +2,7 @@ package org.elsys.ip.fifaresults;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,9 @@ public class ResultsLoader {
     public List<MatchResult> getResults() throws IOException {
         String matchResultInJson = jsonFetcher.getMatchResultInJson();
 
-        ObjectMapper mapper = new ObjectMapper().
-                configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        ObjectMapper mapper = new ObjectMapper()
+                .registerModule(new JavaTimeModule())
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         MatchResult[] matchResults = mapper.readValue(matchResultInJson, MatchResult[].class);
 

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fifa 2022 Chad</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+<body>
+<table class="table">
+    <thead>
+        <tr>
+            <td>Date</td>
+            <td>Group</td>
+            <td>Home Team</td>
+            <td>Home Result</td>
+            <td>Away Result</td>
+            <td>Away Team</td>
+        </tr>
+    </thead>
+    <tr th:each="result : ${matchResults}">
+        <td th:text="${dateHelper.format(result.date, 'dd/MM/yyyy')}"/>
+        <td th:text="${result.group}"/>
+        <td th:text="${result.homeTeam}"/>
+        <td th:text="${result.homeTeamScore}"/>
+        <td th:text="${result.awayTeamScore}"/>
+        <td th:text="${result.awayTeam}"/>
+    </tr>
+</table>
+</body>
+</html>
