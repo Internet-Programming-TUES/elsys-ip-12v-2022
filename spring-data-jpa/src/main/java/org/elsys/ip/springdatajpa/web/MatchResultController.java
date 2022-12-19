@@ -1,6 +1,5 @@
 package org.elsys.ip.springdatajpa.web;
 
-import jakarta.annotation.PostConstruct;
 import org.elsys.ip.springdatajpa.entity.MatchResult;
 import org.elsys.ip.springdatajpa.entity.MatchResultRepository;
 import org.elsys.ip.springdatajpa.entity.Team;
@@ -16,10 +15,10 @@ import java.util.Optional;
 @Controller
 public class MatchResultController {
     @Autowired
-    private MatchResultRepository repository;
+    private MatchResultRepository matchResultRepository;
 
     @Autowired
-    private TeamRepository teams;
+    private TeamRepository teamRepository;
 
     @GetMapping(path = "results")
     public String list(@RequestParam(required = false) String home,
@@ -31,7 +30,7 @@ public class MatchResultController {
             MatchResult entity = new MatchResult();
 
             Team homeTeam;
-            Optional<Team> homeTeamOptional = teams.findByName(home);
+            Optional<Team> homeTeamOptional = teamRepository.findByName(home);
             if (homeTeamOptional.isPresent()) {
                 homeTeam = homeTeamOptional.get();
             } else {
@@ -41,7 +40,7 @@ public class MatchResultController {
 
             entity.setHomeTeam(homeTeam);
             Team awayTeam;
-            Optional<Team> awayTeamOptional = teams.findByName(away);
+            Optional<Team> awayTeamOptional = teamRepository.findByName(away);
             if (awayTeamOptional.isPresent()) {
                 awayTeam = awayTeamOptional.get();
             } else {
@@ -53,9 +52,9 @@ public class MatchResultController {
             entity.setHomeScore(homeScore);
             entity.setAwayScore(awayScore);
 
-            repository.save(entity);
+            matchResultRepository.save(entity);
         }
-        model.addAttribute("matchResults", repository.findAll());
+        model.addAttribute("matchResults", matchResultRepository.findAll());
 
         return "results";
     }
