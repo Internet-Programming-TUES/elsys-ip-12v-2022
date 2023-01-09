@@ -26,7 +26,7 @@
   * Headers
   * Status code
   * Methods
-  * Filter ?
+  * Filter
 
 5. Spring Boot
   * start.spring.io (Spring Initializr)
@@ -48,7 +48,7 @@
     * @RequestMapping - @GetMapping, @PostMapping...
     * @ExceptionHandler
     * Request body, query parameters, path parameters, headers, status code, ...
-  * Servlet filter ?
+  * Servlet filter
   * DB
     * @Repository
     * @Entity
