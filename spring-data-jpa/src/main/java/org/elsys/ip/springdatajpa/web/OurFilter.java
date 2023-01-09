@@ -17,7 +17,8 @@ public class OurFilter implements Filter {
 
         String queryString = ((HttpServletRequest) servletRequest).getQueryString();
         if (queryString == null || !queryString.contains("unlock=1914")) {
-            ((HttpServletResponse)servletResponse).setStatus(402);
+            ((HttpServletResponse)servletResponse).setStatus(401);
+            ((HttpServletResponse)servletResponse).addHeader("WWW-Authenticate", "Basic realm=\"realm\"");
         }
         else {
             filterChain.doFilter(servletRequest, servletResponse);
