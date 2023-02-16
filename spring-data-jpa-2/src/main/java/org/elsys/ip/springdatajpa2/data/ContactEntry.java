@@ -45,5 +45,13 @@ public class ContactEntry {
     public void setType(ContactEntryType type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "ContactEntry{" +
+                "data='" + data + '\'' +
+                ", type=" + type +
+                '}';
+    }
 }
 

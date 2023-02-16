@@ -13,7 +13,7 @@ public class Contact {
     private String firstName;
     private String lastName;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "CONTACT_ID")
     private List<ContactEntry> entries;
 
@@ -56,5 +56,14 @@ public class Contact {
 
     public void setEntries(List<ContactEntry> entries) {
         this.entries = entries;
+    }
+
+    @Override
+    public String toString() {
+        return "Contact{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", entries=" + entries +
+                '}';
     }
 }
