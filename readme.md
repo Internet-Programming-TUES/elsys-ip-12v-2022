@@ -41,7 +41,6 @@
   * Beans (@Bean, @Component)
   * Configuration (@Configuration)
   * ApplicationContext
-    * Multiple contexts?
   * Controller
     * MVC - @Controller
     * REST - @RestController

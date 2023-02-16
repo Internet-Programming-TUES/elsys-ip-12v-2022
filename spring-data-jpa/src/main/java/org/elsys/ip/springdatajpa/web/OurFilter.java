@@ -24,7 +24,5 @@ public class OurFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
             int a = 5;
         }
-
-
     }
 }
