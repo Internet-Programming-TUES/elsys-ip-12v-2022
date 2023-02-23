@@ -2,6 +2,7 @@ package org.elsys.ip.springdatajpa2.data;
 
 import jakarta.persistence.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -17,10 +18,10 @@ public class Contact {
     @JoinColumn(name = "CONTACT_ID")
     private List<ContactEntry> entries;
 
-    public Contact(String firstName, String lastName, List<ContactEntry> entries) {
+    public Contact(String firstName, String lastName, ContactEntry... entries) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.entries = entries;
+        this.entries = Arrays.stream(entries).toList();
     }
 
     public Contact() {

@@ -6,6 +6,7 @@ import org.elsys.ip.springdatajpa2.data.ContactEntryType;
 import org.elsys.ip.springdatajpa2.data.ContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Profile("!test")
 public class CommandLineAppStartupRunner implements CommandLineRunner {
     @Autowired
     private ContactRepository repository;
@@ -41,7 +43,7 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
             for (int i = 3; i < args.length; i+=2) {
                 entries.add(new ContactEntry(args[i+1], ContactEntryType.valueOf(args[i])));
             }
-            Contact contact = new Contact(firstName, lastName, entries);
+            Contact contact = new Contact(firstName, lastName, entries.toArray(new ContactEntry[0]));
             repository.save(contact);
 
             System.out.println(contact);
@@ -50,7 +52,7 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
 
         if (args[0].equals("find")) {
             String searchString = args[1];
-            List<Contact> searchResult = repository.findAllByFirstNameContainsIgnoreCase(searchString);
+            List<Contact> searchResult = repository.findByAny(searchString);
             for (Contact contact : searchResult) {
                 System.out.println(contact);
             }
