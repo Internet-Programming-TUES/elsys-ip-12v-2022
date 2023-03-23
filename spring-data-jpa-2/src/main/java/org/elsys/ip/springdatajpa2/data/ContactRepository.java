@@ -7,10 +7,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ContactRepository extends CrudRepository<Contact, Integer> {
-    @Query("SELECT c FROM Contact c LEFT JOIN c.entries e WHERE " +
+public interface ContactRepository extends CrudRepository<Employee, Integer> {
+    @Query("SELECT c FROM Employee c LEFT JOIN c.entries e WHERE " +
             "lower(c.firstName) like concat('%', lower(:search), '%') or " +
             "lower(c.lastName) like concat('%', lower(:search), '%') or " +
             "lower(e.data) like concat('%', lower(:search), '%')")
-    List<Contact> findByAny(String search);
+    List<Employee> findByAny(String search);
 }

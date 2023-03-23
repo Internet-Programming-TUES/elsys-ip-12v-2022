@@ -1,21 +1,24 @@
 package org.elsys.ip.springdatajpa2;
 
-import org.elsys.ip.springdatajpa2.data.Contact;
-import org.elsys.ip.springdatajpa2.data.ContactEntry;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import jakarta.transaction.Transactional;
 import org.elsys.ip.springdatajpa2.data.ContactEntryType;
 import org.elsys.ip.springdatajpa2.data.ContactRepository;
+import org.elsys.ip.springdatajpa2.data.Employee;
+import org.elsys.ip.springdatajpa2.data.EmployeeContactDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Component
 @Profile("!test")
+@Transactional
 public class CommandLineAppStartupRunner implements CommandLineRunner {
     @Autowired
     private ContactRepository repository;
@@ -38,23 +41,35 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
 
             String firstName = args[1];
             String lastName = args[2];
-            List<ContactEntry> entries = new ArrayList<>();
+            List<EmployeeContactDetails> entries = new ArrayList<>();
 
-            for (int i = 3; i < args.length; i+=2) {
-                entries.add(new ContactEntry(args[i+1], ContactEntryType.valueOf(args[i])));
+            for (int i = 3; i < args.length; i += 2) {
+                entries.add(new EmployeeContactDetails(args[i + 1], ContactEntryType.valueOf(args[i])));
             }
-            Contact contact = new Contact(firstName, lastName, entries.toArray(new ContactEntry[0]));
-            repository.save(contact);
+            Employee employee = new Employee(firstName, lastName, entries.toArray(new EmployeeContactDetails[0]));
+            employee.getReports().addAll(
+                    StreamSupport.stream(repository.findAll().spliterator(), false)
+                            .filter(x -> x.getManager() == null)
+                            .toList());
 
-            System.out.println(contact);
+            employee.getFriends().addAll(
+                    StreamSupport.stream(repository.findAll().spliterator(), false)
+                            .filter(x -> x.getReports() == null || x.getReports().isEmpty())
+                            .toList());
+
+            repository.save(employee);
+
+            System.out.println(employee);
             System.out.println("ADDED");
         }
 
         if (args[0].equals("find")) {
             String searchString = args[1];
-            List<Contact> searchResult = repository.findByAny(searchString);
-            for (Contact contact : searchResult) {
-                System.out.println(contact);
+            List<Employee> searchResult = repository.findByAny(searchString);
+            for (Employee employee : searchResult) {
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+                System.out.println(mapper.writeValueAsString(employee));
             }
         }
     }

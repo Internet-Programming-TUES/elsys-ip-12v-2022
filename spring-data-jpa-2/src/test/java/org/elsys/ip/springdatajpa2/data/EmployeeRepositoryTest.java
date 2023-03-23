@@ -9,30 +9,29 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class ContactRepositoryTest {
+class EmployeeRepositoryTest {
     @Autowired
     private ContactRepository contactRepository;
 
     @BeforeEach
     void setUp() {
-        Contact contact1 = new Contact("First name", "Last name", new ContactEntry("0987654321", ContactEntryType.PHONE));
-        Contact contact2 = new Contact("Contact 2", "0987654321", new ContactEntry("email", ContactEntryType.EMAIL));
-        Contact contact3 = new Contact("Contact 3", "Tri");
-        Contact contact4 = new Contact("Contact 4", "Chetiri", new ContactEntry("0881234", ContactEntryType.PHONE), new ContactEntry("discord#123", ContactEntryType.DISCORD));
+        Employee employee1 = new Employee("First name", "Last name", new EmployeeContactDetails("0987654321", ContactEntryType.PHONE));
+        Employee employee2 = new Employee("Contact 2", "0987654321", new EmployeeContactDetails("email", ContactEntryType.EMAIL));
+        Employee employee3 = new Employee("Contact 3", "Tri");
+        Employee employee4 = new Employee("Contact 4", "Chetiri", new EmployeeContactDetails("0881234", ContactEntryType.PHONE), new EmployeeContactDetails("discord#123", ContactEntryType.DISCORD));
 
-        contactRepository.save(contact1);
-        contactRepository.save(contact2);
-        contactRepository.save(contact3);
-        contactRepository.save(contact4);
+        contactRepository.save(employee1);
+        contactRepository.save(employee2);
+        contactRepository.save(employee3);
+        contactRepository.save(employee4);
     }
 
     @Test
     void findByAny() {
-        List<Contact> onlyFirst = contactRepository.findByAny("First");
+        List<Employee> onlyFirst = contactRepository.findByAny("First");
         assertThat(onlyFirst).hasSize(1);
         assertThat(onlyFirst.get(0).getFirstName()).isEqualTo("First name");
 
@@ -48,21 +47,21 @@ class ContactRepositoryTest {
         assertThat(onlyFirst).hasSize(1);
         assertThat(onlyFirst.get(0).getFirstName()).isEqualTo("First name");
 
-        List<Contact> onlySecond = contactRepository.findByAny("email");
+        List<Employee> onlySecond = contactRepository.findByAny("email");
         assertThat(onlySecond).hasSize(1);
         assertThat(onlySecond.get(0).getFirstName()).isEqualTo("Contact 2");
 
-        List<Contact> all = contactRepository.findByAny("0987");
+        List<Employee> all = contactRepository.findByAny("0987");
         assertThat(all).hasSize(2);
 
-        List<Contact> none = contactRepository.findByAny("non-existing-string");
+        List<Employee> none = contactRepository.findByAny("non-existing-string");
         assertThat(none).hasSize(0);
 
-        List<Contact> only3 = contactRepository.findByAny("tri");
+        List<Employee> only3 = contactRepository.findByAny("tri");
         assertThat(only3).hasSize(1);
         assertThat(only3.get(0).getFirstName()).isEqualTo("Contact 3");
 
-        List<Contact> only4 = contactRepository.findByAny("discord#123");
+        List<Employee> only4 = contactRepository.findByAny("discord#123");
         assertThat(only4).hasSize(1);
         assertThat(only4.get(0).getFirstName()).isEqualTo("Contact 4");
 

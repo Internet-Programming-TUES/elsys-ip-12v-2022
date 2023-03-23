@@ -1,11 +1,9 @@
 package org.elsys.ip.springdatajpa2.data;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
-public class ContactEntry {
+public class EmployeeContactDetails {
     @Id
     @GeneratedValue
     private int id;
@@ -14,12 +12,16 @@ public class ContactEntry {
 
     private ContactEntryType type;
 
-    public ContactEntry(String data, ContactEntryType type) {
+//    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "EMPLOYEE_ID")
+//    private Employee employee;
+
+    public EmployeeContactDetails(String data, ContactEntryType type) {
         this.data = data;
         this.type = type;
     }
 
-    public ContactEntry() {
+    public EmployeeContactDetails() {
     }
 
     public int getId() {
@@ -53,5 +55,13 @@ public class ContactEntry {
                 ", type=" + type +
                 '}';
     }
+
+//    public Employee getContact() {
+//        return employee;
+//    }
+//
+//    public void setContact(Employee employee) {
+//        this.employee = employee;
+//    }
 }
 
